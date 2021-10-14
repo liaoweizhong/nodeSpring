@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <!-- import CSS -->
+        <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+        <!-- import Vue before Element -->
+        <script src="https://unpkg.com/vue/dist/vue.js"></script>
+        <!-- import JavaScript -->
+        <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+        <!-- import axios -->
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    </head>
+
+    <body>
+        <div id="app">
+            <el-button @click='create'> 提交 </el-button>
+            <el-button @click='allModel'> 全部model </el-button>
+            <el-button @click='allServer'> 全部server </el-button>
+            <el-button @click='allAction'> 全部action </el-button>
+            <el-table :data="tableData" border style="width: 100%">
+                <el-table-column prop="table_name" label="表名" width="180">
+                </el-table-column>
+                <el-table-column prop="table_comment" label="表名" width="180">
+                </el-table-column>
+                <el-table-column label="创建model" width="100">
+                    <template slot-scope="scope">
+                        <el-switch v-model="scope.row.model" active-color="#13ce66" inactive-color="#ff4949">
+                        </el-switch>
+                    </template>
+                </el-table-column>
+                <el-table-column label="创建server" width="100">
+                    <template slot-scope="scope">
+                        <el-switch v-model="scope.row.server" active-color="#13ce66" inactive-color="#ff4949">
+                        </el-switch>
+                    </template>
+                </el-table-column>
+                <el-table-column label="创建action" width="100">
+                    <template slot-scope="scope">
+                        <el-switch v-model="scope.row.action" active-color="#13ce66" inactive-color="#ff4949">
+                        </el-switch>
+                    </template>
+                </el-table-column>
+            </el-table>
+
+
+        </div>
+    </body>
+    <script>
+        new Vue({
+            el: '#app',
+            data: function () {
+                return {
+                    visible: false,
+                    tableData: []
+                }
+            },
+            mounted (){
+                this.getTable();
+            },
+            methods: {
+
+                allAction (){
+                    this.tableData.forEach((e)=>{ return e.action = !e.action })
+                },
+
+                allModel (){
+                    this.tableData.forEach((e)=>{ return e.model = !e.model })
+                },
+
+                allServer (){
+                    this.tableData.forEach((e)=>{ return e.server = !e.server })
+                },
+
+                getTable(){
+
+                    axios({
+                        url: "/doc/getTable",
+                        method: "get",
+                        params: {
+                            password: ""
+                        }
+                    }).then((res)=>{
+                        if( res.data.code === 200 ){
+                            this.tableData = res.data.data.map((e)=>{ return { ...e, model: false, server: false, action: false } });
+                        }else{
+                            this.tableData=[];
+                            this.$message.error("数据库连接失败！请检查数据库配置")
+                        }
+                    })
+
+                },
+
+                // create (){
+                  
+                //     axios({
+                //         url: "/doc/create",
+                //         method: "post",
+                //         data: {
+                //             name: "bs_videoDanmu",
+                //             model: false,
+                //             server: false,
+                //             action: true
+                //         }
+                //     }).then((res)=>{
+                        
+                //     })
+                  
+                // },
+
+                create (){
+                    debugger;
+                    let data = this.tableData;
+                    var a = function (i){
+                        if( !data[i] ) return this.$message.success("创建成功");
+                        axios({
+                            url: "/doc/create",
+                            method: "post",
+                            data: {
+                                name: data[i].table_name,
+                                // name: "bs_videoDanmu",
+                                model: data[i].model,
+                                server: data[i].server,
+                                action: data[i].action
+                            }
+                        }).then((res)=>{
+                            a(++i);
+                        })
+                    }
+                    a(0);
+                }
+
+            }
+        })
+    </script>
+
+</html>

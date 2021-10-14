@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+			<title>Hello HTML</title>
+            <style>
+                body,html { height: 100%; margin: 0; padding: 5px; box-sizing: border-box; }
+                .url { padding: 15px 8px; border-radius: 4px; color:dodgerblue; width: 48%; height: 50%; }
+                .type { padding: 15px 0px; border-radius: 4px; color:dodgerblue;margin-bottom: 15px; }
+                .type > span { border-radius: 4px; cursor: pointer; margin: 0 15px; border: solid 1px #ffffff00; padding: 8px; }
+                .type > span:hover { border: solid 1px dodgerblue; }
+                .btn { padding: 15px 0; border-radius: 4px; color:dodgerblue; width: 100%; margin-top: 15px;}
+            </style>
+            <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		</head>
+		<body>
+
+            <textarea id='path' style='height: 35px;' class='url'></textarea>
+
+            <div class='type'>
+                <span onclick='get()'>get</span>
+                <span>post</span>
+                <span>put</span>
+                <span>del</span>
+                <span>生成model</span>
+            </div>
+
+			<textarea id='url' class='url'></textarea>
+            <textarea id='ret' class='url'></textarea>
+            
+            <button class='btn' onclick='ajax()'> 发起请求 </button>
+		</body>
+
+        <script>
+            
+            var url = document.getElementById("url");
+            var path = document.getElementById("path");
+            
+            // var type = document.getElementById("type")
+
+            // 发起请求
+            function ajax(){
+                
+                var p = eval(url.value);
+                p.then((res)=>{
+                    ret.value = JSON.stringify(res.data)
+                })
+
+            }
+
+            function get(){
+                url.value = `axios({\n         url: \"${path.value}\",\n         method: \"get\",\n         params: {\n        \n         }\n    })`
+            }
+
+            function post(){
+                url.value = `axios({\n         url: \"${path.value}\",\n         method: \"post\",\n         params: {\n        \n         }\n    })`
+            }
+
+            function put(){
+                url.value = `axios({\n         url: \"${path.value}\",\n         method: \"put\",\n         params: {\n        \n         }\n    })`
+            }
+
+            function del(){
+                url.value = `axios({\n         url: \"${path.value}\",\n         method: \"del\",\n         params: {\n        \n         }\n    })`
+            }
+
+            // axios({
+            //     url: "/user",
+            //     method: "post",
+            //     data: {
+                
+            //     }
+            // }).then((res)=>{
+            //     debugger;
+            // })
+
+        </script>
+	</head>
+</html>
