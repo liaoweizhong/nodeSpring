@@ -1,14 +1,7 @@
-
-
 /node_modules/
 /mysql/
-/src/appAction/
-/src/appModel/
-/src/appServer/
-
-!/src/appAction/index.ts
 
 /database.config.js
 
-.rar
-.bat
+*.rar
+*.bat
