@@ -26,6 +26,38 @@ export function createDoc (app: any){
         });
     });
 
+    app.get("/test",function(req: any,res: any){
+        var options = {
+            root: __dirname,    
+            headers: {
+              "Content-Type": "text/html"
+            }
+        }
+        res.sendFile('test.html',options, function(error: any){
+            if(error){
+                // console.log('Sent failed:', 'index.html' + error);
+            }else{
+                // console.log('Sent sucess:', 'index.html');
+            }
+        });
+    });
+
+    app.get("/login",function(req: any,res: any){
+        var options = {
+            root: __dirname,    
+            headers: {
+              "Content-Type": "text/html"
+            }
+        }
+        res.sendFile('login.html',options, function(error: any){
+            if(error){
+                // console.log('Sent failed:', 'index.html' + error);
+            }else{
+                // console.log('Sent sucess:', 'index.html');
+            }
+        });
+    });
+
     app.get("/index",function(req: any,res: any){
         var options = {
             root: __dirname,    

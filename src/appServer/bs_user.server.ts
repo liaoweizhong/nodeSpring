@@ -1,6 +1,7 @@
 
 import bs_userModel from "../appModel/bs_user.model"
 import { getUuid, getToken } from '../express/util'
+import cache from '../util/cache'
 
 namespace bs_userServer {
 
@@ -86,7 +87,22 @@ namespace bs_userServer {
                 if( !data[0] ){
                     return err("密码账号错误！")
                 }
+                // 将用户等级写入等级缓存中
+                cache.setUserLevel(data[0].id,data[0].level);
                 suc(getToken(JSON.stringify(data[0])));
+            })
+        })
+    }
+
+    /**
+     * 获取权限
+     * @param id 
+     * @returns 
+     */
+    export function getLevel (id: String){
+        return new Promise((suc,err)=>{
+            getById(id).then((data: any)=>{
+                suc( data.level );
             })
         })
     }

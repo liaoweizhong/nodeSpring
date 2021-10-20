@@ -29,6 +29,7 @@ export function setToken (payload: any){
 
 export function setTokenByHeader (header: any){
     let token:String=header.authorization;
+    console.log(token);
     if( token ){
         return jwt.verify(token.split(" ")[1],tokenKey)
     }else{

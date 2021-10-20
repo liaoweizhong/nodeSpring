@@ -42,4 +42,21 @@ class bs_updateFile extends Interface  {
         })
     }
 
+    // 上传文件
+    @Post( "/updateVideo" , { isLogin: true } )
+    updateVideo(param: any, user: any, retJson: Function){
+        console.log("收到的user",user)
+        bs_updateFileServer.updateVideo( user.id, param.name, param.id,  param.base64, param.length, param.index).then((data:any)=>{
+            retJson(data)
+        })
+    }
+
+    // 合并文件
+    @Get( "/mergeVideo" , { isLogin: true } )
+    mergeVideo(param: any, user: any, retJson: Function){
+        bs_updateFileServer.mergeVideo(user.id, param.id, param.type).then((data:any)=>{
+            retJson({code: 200, data})
+        })
+    }
+
 }
