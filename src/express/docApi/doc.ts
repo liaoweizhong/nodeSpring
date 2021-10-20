@@ -112,7 +112,12 @@ export function createDoc (app: any){
         }else{
             res.json({ code: 200 })
         }
-   })
+    })
+
+    console.log("---------------------------")
+    console.log("成功开启服务器：")
+    console.log("输入/doc，进入数据库管理界面");
+    console.log("---------------------------")
 
 }
 
