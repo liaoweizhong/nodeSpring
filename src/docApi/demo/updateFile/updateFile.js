@@ -31,7 +31,6 @@ let update = window.update = function(name,base64,type){
     this.selectFlie = selectFlie;
     this.setFiles = setFiles;
 
-
     // 初始化事件
     this.init = init;
 
