@@ -177,7 +177,7 @@ export function createAction(name: String , data: any, fn: Function){
     var model = `
 import { InterfaceAnnotation, Get, Post, Put, Del, Interface } from "../express/interface"
 import ${name}Server from "../appServer/${name}.server" 
-import { DocumentationApi, DocumentationApiInter, documentationType } from '../express/docApi/doc'
+import { DocumentationApi, DocumentationApiInter, documentationType } from '../docApi/doc'
 
 @InterfaceAnnotation({ path: "/${name}" })
 @DocumentationApi("用户列表",documentationType.API, "2021/06/02 17:57")

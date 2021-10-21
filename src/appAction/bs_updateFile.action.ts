@@ -1,7 +1,7 @@
 
 import { InterfaceAnnotation, Get, Post, Put, Del, Interface } from "../express/interface"
 import bs_updateFileServer from "../appServer/bs_updateFile.server" 
-import { DocumentationApi, DocumentationApiInter, documentationType } from '../express/docApi/doc'
+import { DocumentationApi, DocumentationApiInter, documentationType } from '../docApi/doc'
 
 @InterfaceAnnotation({ path: "/bs_updateFile" })
 @DocumentationApi("用户列表",documentationType.API, "2021/06/02 17:57")
@@ -43,18 +43,17 @@ class bs_updateFile extends Interface  {
     }
 
     // 上传文件
-    @Post( "/updateVideo" , { isLogin: true } )
+    @Post( "/updateFile" , { isLogin: true } )
     updateVideo(param: any, user: any, retJson: Function){
-        console.log("收到的user",user)
-        bs_updateFileServer.updateVideo( user.id, param.name, param.id,  param.base64, param.length, param.index).then((data:any)=>{
+        bs_updateFileServer.updateFile( user.id, param.name, param.id,  param.base64, param.length, param.index).then((data:any)=>{
             retJson(data)
         })
     }
 
     // 合并文件
-    @Get( "/mergeVideo" , { isLogin: true } )
+    @Get( "/mergeFile" , { isLogin: true } )
     mergeVideo(param: any, user: any, retJson: Function){
-        bs_updateFileServer.mergeVideo(user.id, param.id, param.type).then((data:any)=>{
+        bs_updateFileServer.mergeFile(user.id, param.id, param.type).then((data:any)=>{
             retJson({code: 200, data})
         })
     }

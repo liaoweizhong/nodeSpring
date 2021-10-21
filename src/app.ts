@@ -1,6 +1,6 @@
 
 import { expressAnnotation , expressServer } from "./express/express"
-import { createDoc } from "./express/docApi/doc"
+import { createDoc } from "./docApi/doc"
 
 @expressAnnotation
 class server extends expressServer {

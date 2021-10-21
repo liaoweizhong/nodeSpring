@@ -19,7 +19,6 @@ export function getUuid(){
 }
 
 export function getToken (payload: any){    
-    console.log(payload)
     return jwt.sign(payload, tokenKey)
 }
 
@@ -29,7 +28,6 @@ export function setToken (payload: any){
 
 export function setTokenByHeader (header: any){
     let token:String=header.authorization;
-    console.log(token);
     if( token ){
         return jwt.verify(token.split(" ")[1],tokenKey)
     }else{

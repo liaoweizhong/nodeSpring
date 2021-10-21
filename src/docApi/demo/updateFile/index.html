@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <!-- import CSS -->
+        <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+        <!-- import Vue before Element -->
+        <script src="https://unpkg.com/vue/dist/vue.js"></script>
+        <!-- import JavaScript -->
+        <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+        <!-- import axios -->
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="./updateFile.js" rel='stylesheet'></script>
+    </head>
+
+    <style>
+        .updateBox {
+            height: 150px;
+            padding: 15px;
+            line-height: 150px;
+            text-align: center;
+        }
+        .ralte {
+            height: 20px;
+            background: #ffff00;
+            width: 30%;
+            border-radius: 15px;
+            text-align: center;
+            transition: width 0.25s;
+        }
+    </style>
+
+    <body>
+        <div id="app">
+            <el-card class="box-card">
+                <div slot="header" class="clearfix">
+                    <span>上传测试</span>
+                </div>
+                <div class="text">
+                    <div class='updateBox' @click='updateClick' @drop='dropFile' ondragover='event.preventDefault()'>点击上传(或者直接拖進來)</div>
+                    <div class='ralte' v-show='rate > 0' :style='"width:"+rate*100+"%"'>{{rate * 100}}%</div>
+                </div>
+            </el-card>
+
+        </div>
+    </body>
+    <script>
+
+        document.ondragover = function (e) {
+            e.preventDefault();  //只有在ondragover中阻止默认行为才能触发 ondrop 而不是   ondragleave
+        };
+        document.ondrop = function (e) {
+            e.preventDefault();  //阻止 document.ondrop的默认行为  *** 在新窗口中打开拖进的图片
+        };
+        /*拖拽的源对象----- 客户端的一张图片 */
+        /*拖拽目标对象-----div#container  若图片释放在此元素上方，则需要在其中显示*/
+        // container.ondragover = function (e) {
+        //     e.preventDefault();
+        // };
+
+        new Vue({
+            el: '#app',
+            data: function () {
+                return {
+                    visible: false,
+                    tableData: [],
+                    inputFile: null,
+                    rate: 0
+                }
+            },
+            mounted (){
+                // this.getTable();
+            },
+            methods: {
+                updateClick (){
+                    this.rate = 0;
+                    var ue = new update();
+                    ue.oncomplete = (res)=>{
+                        console.log(res);
+                        this.rate = res.rate;
+                    }
+                    ue.selectFlie().then(()=>{
+                        ue.init();
+                    });
+                },
+
+                dropFile (res){
+                    this.rate = 0;
+                    var ue = new update();
+                    ue.oncomplete = (res)=>{
+                        console.log(res);
+                        this.rate = res.rate;
+                    }
+                    ue.setFiles(res.dataTransfer.files[0]).then(()=>{
+                        ue.init();
+                    });
+                    
+                },
+
+                selectFile (){
+                    
+                },
+
+                inputFileChange (){
+
+                },
+
+                updateBase (){
+                    axios({
+                        url: "/bs_updateFile/updateVideo",
+                        method: "post",
+                        headers: {
+                            "Authorization": "token eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjEiLCJ1c2VybmFtZSI6ImxpYW8xMTEiLCJwYXNzd29yZCI6IjEyMzQ1NiIsIm5hbWUiOiLlu5YiLCJjcmVhdGVEYXRhIjoiMjAyMS0wMi0xN1QxNjoxNzoxMi4wMDBaIiwiaW1hZ2VzIjpudWxsLCJpbmZvIjpudWxsLCJsZXZlbCI6Nn0.Xr9ngmrlLksCiGb02qi3o63rAC86PhEw-BjvE6qKjzg"
+                        },
+                        data: {
+                            name: "123456",
+                            id: "1",
+                            base64: "53as54da5s4d65a4sdasd",
+                            length: 2000,
+                            index: 1
+                        }
+                    }).then((res)=>{
+                        alert("成功")
+                    })
+                }
+            }
+        })
+    </script>
+
+</html>

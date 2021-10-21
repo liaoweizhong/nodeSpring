@@ -10,7 +10,7 @@ const updatefile = require('../util/updateFile.js')
 namespace bs_updateFileServer {
 
     // 上传文件
-    export function updateVideo (user_id: String ,name: String,id: String, base64: String, length: Number, index: Number){
+    export function updateFile (user_id: String ,name: String,id: String, base64: String, length: Number, index: Number){
         return new Promise((suc)=>{
             // 判断用户等级
             var connect = db.connection();
@@ -33,7 +33,7 @@ namespace bs_updateFileServer {
     }
 
     // 合成文件
-    export function mergeVideo (user_id: String, id: String, type: String ){
+    export function mergeFile (user_id: String, id: String, type: String ){
         return new Promise((suc)=>{
             updatefile.merge(id).then((data: any)=>{
                 var connect = db.connection();

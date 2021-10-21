@@ -6,9 +6,9 @@ let fileData = [];
 // 常用配置
 let _config = {
 	// 上传文件临时存储位置
-	path: '../updateFile/temporary',
+	path: './updateFile/temporary',
 	// 上传文件最终保存地址
-	paths: '../updateFile/document'
+	paths: './updateFile/document'
 }
 
 // 创建一个上传的实例

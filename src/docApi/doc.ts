@@ -1,7 +1,7 @@
 let apisArray: Array<Object> = [];
-import db from '../../database'
+import db from '../database'
 import { createModel, createServer, createAction } from './docCreate'
-const databaseConfig =  require('../../../database.config');
+const databaseConfig =  require('../../database.config');
 
 
 /**
@@ -17,29 +17,17 @@ export function createDoc (app: any){
               "Content-Type": "text/html"
             }
         }
-        res.sendFile('doc.html',options, function(error: any){
-            if(error){
-                // console.log('Sent failed:', 'index.html' + error);
-            }else{
-                // console.log('Sent sucess:', 'index.html');
-            }
-        });
+        res.sendFile('doc.html',options, function(error: any){ });
     });
 
-    app.get("/test",function(req: any,res: any){
+    app.get("/updateFile",function(req: any,res: any){
         var options = {
             root: __dirname,    
             headers: {
               "Content-Type": "text/html"
             }
         }
-        res.sendFile('test.html',options, function(error: any){
-            if(error){
-                // console.log('Sent failed:', 'index.html' + error);
-            }else{
-                // console.log('Sent sucess:', 'index.html');
-            }
-        });
+        res.sendFile('/demo/updateFile/index.html',options, function(error: any){ });
     });
 
     app.get("/login",function(req: any,res: any){
@@ -49,13 +37,7 @@ export function createDoc (app: any){
               "Content-Type": "text/html"
             }
         }
-        res.sendFile('login.html',options, function(error: any){
-            if(error){
-                // console.log('Sent failed:', 'index.html' + error);
-            }else{
-                // console.log('Sent sucess:', 'index.html');
-            }
-        });
+        res.sendFile('login.html',options, function(error: any){ });
     });
 
     app.get("/index",function(req: any,res: any){
@@ -65,13 +47,7 @@ export function createDoc (app: any){
               "Content-Type": "text/html"
             }
         }
-        res.sendFile('index.html',options, function(error: any){
-            if(error){
-                // console.log('Sent failed:', 'index.html' + error);
-            }else{
-                // console.log('Sent sucess:', 'index.html');
-            }
-        });
+        res.sendFile('index.html',options, function(error: any){ });
     });
 
     app.get("/doc/getTable",function(req: any,res: any){

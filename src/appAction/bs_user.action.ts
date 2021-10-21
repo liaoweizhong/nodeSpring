@@ -1,7 +1,7 @@
 
 import { InterfaceAnnotation, Get, Post, Put, Del, Interface } from "../express/interface"
 import bs_userServer from "../appServer/bs_user.server" 
-import { DocumentationApi, DocumentationApiInter, documentationType } from '../express/docApi/doc'
+import { DocumentationApi, DocumentationApiInter, documentationType } from '../docApi/doc'
 
 @InterfaceAnnotation({ path: "/bs_user" })
 @DocumentationApi("用户列表",documentationType.API, "2021/06/02 17:57")

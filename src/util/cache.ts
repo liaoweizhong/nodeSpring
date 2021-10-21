@@ -6,7 +6,7 @@ let Cache = {
 
 const setUserLevel = function(key: string, level: String){
     Cache.userLevel.set(key,level);
-    console.log("缓存记录",Cache);
+    // console.log("缓存记录",Cache);
 }
 
 const getUserLevel = function(key: string){
