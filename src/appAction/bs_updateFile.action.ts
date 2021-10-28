@@ -45,7 +45,7 @@ class bs_updateFile extends Interface  {
     // 上传文件
     @Post( "/updateFile" , { isLogin: true } )
     updateVideo(param: any, user: any, retJson: Function){
-        bs_updateFileServer.updateFile( user.id, param.name, param.id,  param.base64, param.length, param.index).then((data:any)=>{
+        bs_updateFileServer.updateFile( user.level, param.name, param.id,  param.base64, param.length, param.index).then((data:any)=>{
             retJson(data)
         })
     }
@@ -53,8 +53,16 @@ class bs_updateFile extends Interface  {
     // 合并文件
     @Get( "/mergeFile" , { isLogin: true } )
     mergeVideo(param: any, user: any, retJson: Function){
-        bs_updateFileServer.mergeFile(user.id, param.id, param.type).then((data:any)=>{
+        bs_updateFileServer.mergeFile(user.id, param.id, param.type, param.name, param.folder || "").then((data:any)=>{
             retJson({code: 200, data})
+        })
+    }
+
+    // 获取文件内容 根据用户和文件夹
+    @Get( "/getByUserAndFolder" , { isLogin: true } )
+    getByUserAndFolder (param: any, user: any, retJson: Function){
+        bs_updateFileServer.query({ useId: user.id, folder: param.folder }).then((data)=>{ 
+            retJson(data);
         })
     }
 

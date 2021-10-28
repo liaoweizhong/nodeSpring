@@ -13,13 +13,17 @@ class bs_updateFileModel extends Model {
     public path:Filed = new Filed("path", Fieldtype.String );
                             
     //  
-    public type:Filed = new Filed("type", Fieldtype.Number );
+    public type:Filed = new Filed("type", Fieldtype.String );
                             
     // 使用者id 
-    public useId:Filed = new Filed("useId", Fieldtype.Number );
+    public useId:Filed = new Filed("useId", Fieldtype.String );
                             
     // 上传者 
-    public master:Filed = new Filed("master", Fieldtype.Number );
+    public master:Filed = new Filed("master", Fieldtype.String );
+
+    public folder:Filed = new Filed("folder", Fieldtype.String );
+
+    public name:Filed = new Filed("name", Fieldtype.String );
             
 }
 

@@ -29,12 +29,13 @@ export function expressAnnotation ( AppServer: any ){
         next();
     });
 
+    // 支持静态访问路径
+    app.use(express.static(__dirname.split("src")[0]+"src"));
+
     // 配置body-parser模块
     app.use(bodyParser.urlencoded({limit: '500mb', extended: false }));
     app.use(bodyParser.json({limit: '500mb'}));
-
-    // 支持静态访问路径
-    app.use(express.static(__dirname.split("src")[0]+"src"));
+    // app.use(express.json())
     
     // 注册服务
     appServer.setExpress(app);

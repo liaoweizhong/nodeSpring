@@ -14,88 +14,126 @@
     </head>
 
     <body>
-        <div id="app">
-            <div id="login">
-                <div id="bgd">
-                  <canvas
-                    id='myCanvas'
-                    :width='width'
-                    :height='height'
-                  >
-                  </canvas>
-                </div>
-                <div id="loginBox">
-                  <h4>
-                    登录
-                    <span class='backHomeBtn' @click="goHome">返回首页</span>
-                  </h4>
-                  <el-form
-                    :model="loginForm"
-                    :rules="loginRules"
-                    ref="loginForm"
-                    label-width="0px"
-                  >
-                    <el-form-item
-                      label=""
-                      prop="userName"
-                      style="margin-top:40px;"
-                    >
-                      <el-row>
-                        <el-col :span='2'>
-                          <i class='el-icon-user-solid iconfont'></i>
-                          <!-- <span class="iconfont">&#xe654;</span> -->
-                        </el-col>
-                        <el-col :span='22'>
-                          <el-input
-                            class="inps"
-                            placeholder='用户名'
-                            v-model="loginForm.userName"
-                          ></el-input>
-                        </el-col>
-                      </el-row>
-                    </el-form-item>
-                    <el-form-item
-                      label=""
-                      prop="passWord"
-                    >
-                      <el-row>
-                        <el-col :span='2'>
-                          <i class='el-icon-s-check iconfont'></i>
-                        </el-col>
-                        <el-col :span='22'>
-                          <el-input
-                            class="inps"
-                            placeholder='密码'
-                            show-password
-                            v-model="loginForm.passWord"
-                          ></el-input>
-                        </el-col>
-                      </el-row>
-                    </el-form-item>
-                    <el-form-item style="margin-top:55px;text-align:center;">
-                      <el-button
-                        style='width: 140px;'
-                        type="primary"
-                        round
-                        class="submitBtn"
-                        @click="submitForm"
-                      >登录</el-button>
-                      <el-button
-                        type="primary"
-                        round
-                        class="submitBtn"
-                        @click="goRegistered"
-                      >注册</el-button>
-                    </el-form-item>
-                  </el-form>
-                </div>
-              </div>
-
+      <div id="login">
+        <div id="bgd">
+          <canvas
+            id='myCanvas'
+            :width='width'
+            :height='height'
+          >
+          </canvas>
         </div>
+        <div id="loginBox">
+          <h4>
+            登录
+            <span class='backHomeBtn' @click="goHome">返回首页</span>
+          </h4>
+          <el-form
+            :model="loginForm"
+            :rules="loginRules"
+            ref="loginForm"
+            label-width="0px"
+          >
+            <el-form-item
+              label=""
+              prop="userName"
+              style="margin-top:40px;"
+            >
+              <el-row>
+                <el-col :span='2'>
+                  <i class='el-icon-user-solid iconfont'></i>
+                  <!-- <span class="iconfont">&#xe654;</span> -->
+                </el-col>
+                <el-col :span='22'>
+                  <el-input
+                    class="inps"
+                    placeholder='昵称'
+                    v-model="loginForm.name"
+                  ></el-input>
+                </el-col>
+              </el-row>
+            </el-form-item>
+            <el-form-item
+              label=""
+              prop="userName"
+              style="margin-top:40px;"
+            >
+              <el-row>
+                <el-col :span='2'>
+                  <i class='el-icon-user-solid iconfont'></i>
+                  <!-- <span class="iconfont">&#xe654;</span> -->
+                </el-col>
+                <el-col :span='22'>
+                  <el-input
+                    class="inps"
+                    placeholder='用户名'
+                    v-model="loginForm.userName"
+                  ></el-input>
+                </el-col>
+              </el-row>
+            </el-form-item>
+            <el-form-item
+              label=""
+              prop="passWord"
+            >
+              <el-row>
+                <el-col :span='2'>
+                  <i class='el-icon-s-check iconfont'></i>
+                </el-col>
+                <el-col :span='22'>
+                  <el-input
+                    class="inps"
+                    placeholder='密码'
+                    v-model="loginForm.passWord"
+                  ></el-input>
+                </el-col>
+              </el-row>
+            </el-form-item>
+            <el-form-item
+              label=""
+              prop="passWord"
+            >
+              <el-row>
+                <el-col :span='2'>
+                  <i class='el-icon-s-check iconfont'></i>
+                </el-col>
+                <el-col :span='22'>
+                  <el-input
+                    class="inps"
+                    placeholder='重复密码'
+                    v-model="loginForm.passWords"
+                  ></el-input>
+                </el-col>
+              </el-row>
+            </el-form-item>
+            <el-form-item style="margin-top:55px;text-align:center;">
+              <el-button
+                style='width: 140px;'
+                type="primary"
+                round
+                class="submitBtn"
+                @click="submitForm"
+              >注册</el-button>
+              <el-button
+                type="primary"
+                round
+                class="submitBtn"
+                @click="goLogin"
+              >登录</el-button>
+              <!-- <el-button
+                type="primary"
+                round
+                class="submitBtn"
+                @click="goHome"
+              >首页</el-button> -->
+            </el-form-item>
+          </el-form>
+        </div>
+      </div>
     </body>
     <script>
         new Vue({
-            el: '#app',
+            el: '#login',
             data() {
                 return {
                 canvas: null,
@@ -147,8 +185,12 @@
                 width: window.innerWidth,
                 height: window.innerHeight,
                 loginForm: {
-                    userName: "",
-                    passWord: ""
+                  name: "",
+                  userName: "",
+                  passWord: "",
+                  passWords: "",
+                  iphone: "",
+                  code: ""
                 },
                 loginRules: {
                     userName: [
@@ -162,21 +204,33 @@
                 //提交登录
                 submitForm() {
 
-                    login( this.loginForm.userName , this.loginForm.passWord).then((e)=>{
-                        if( e.code == 200 ){
-                            this.$message({
-                                type: "success",
-                                message: "登录成功"
-                            })
-                            // 记录token值
-                            set_cache("token",e.data);
-                            }else{
-                            this.$message({
-                                type: "error",
-                                message: e.data.msg || "系统错误"
-                            })
-                        }
-                    })
+                  axios({
+                      url: "/bs_user/registered",
+                      method: "get",
+                      params: {
+                        username: this.loginForm.userName , 
+                        password: this.loginForm.passWord,
+                        iphone: this.loginForm.iphone,
+                        code: this.loginForm.code
+                      }
+                  }).then((e)=>{
+                    if( e.data.code == 200 ){
+                        this.$message({
+                            type: "success",
+                            message: "登录成功"
+                        })
+                        // 记录token值
+                        localStorage.setItem("token",e.data.data);
+                        setTimeout(()=>{
+                          location.href = "../folder/index.html";
+                        },1000)
+                      }else{
+                        this.$message({
+                            type: "error",
+                            message: e.data.msg || "系统错误"
+                        })
+                    }
+                  })
                 },
                 //重复动画
                 drawFrame() {

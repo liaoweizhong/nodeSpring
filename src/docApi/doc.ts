@@ -20,7 +20,7 @@ export function createDoc (app: any){
         res.sendFile('doc.html',options, function(error: any){ });
     });
 
-    app.get("/updateFile",function(req: any,res: any){
+    app.get("/folder",function(req: any,res: any){
         var options = {
             root: __dirname,    
             headers: {

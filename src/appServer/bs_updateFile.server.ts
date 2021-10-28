@@ -10,15 +10,14 @@ const updatefile = require('../util/updateFile.js')
 namespace bs_updateFileServer {
 
     // 上传文件
-    export function updateFile (user_id: String ,name: String,id: String, base64: String, length: Number, index: Number){
+    export function updateFile (level: Number ,name: String,id: String, base64: String, length: Number, index: Number){
         return new Promise((suc)=>{
             // 判断用户等级
             var connect = db.connection();
-            db.operate(connect,
-                "select level from bs_user where id = ?",[user_id],function(result: any){
-                // 判断级别
-                if( result[0].level >= 4 ) {
-                    console.log("收到的base64","base64")
+            // db.operate(connect,
+            //     "select level from bs_user where id = ?",[user_id],function(result: any){
+            //     // 判断级别
+                if( level >= 4 ) {
                     // 获取收到的
                     updatefile.addFile({
                         name, id, base64, length, index
@@ -28,19 +27,19 @@ namespace bs_updateFileServer {
                 }else{
                     suc({code: 302, msg: "用户没有权限"});
                 }
-            });
+            // });
         })
     }
 
     // 合成文件
-    export function mergeFile (user_id: String, id: String, type: String ){
+    export function mergeFile (user_id: String, id: String, type: String, name: String, folder: String = "" ){
         return new Promise((suc)=>{
             updatefile.merge(id).then((data: any)=>{
                 var connect = db.connection();
                 // 添加到数据库记录
                 db.operate(connect,
-                    "INSERT INTO bs_updateFile (path, type, master) "+
-                    "VALUES (?, ?, ?)",[data.path, type, user_id],function(result: any){
+                    "INSERT INTO bs_updateFile (path, type, useId ,master, name, folder) "+
+                    "VALUES (?, ?, ?, ?, ?, ?)",[data.path, type, user_id, user_id, name, folder],function(result: any){
                     // 返回数据
                     suc({data: data , id: result.insertId})
                 });
@@ -56,6 +55,13 @@ namespace bs_updateFileServer {
             bs_updateFile.get().then((res)=>{ suc(res); });
         })
 
+    }
+
+    export function query (param: any){
+        return new Promise((suc: any)=>{
+            var bs_updateFile = bs_updateFileModel.get();
+            bs_updateFile.query(param).then((res: any)=>{ suc(res); });
+        })
     }
 
     export function addParam ( param: any ){ 

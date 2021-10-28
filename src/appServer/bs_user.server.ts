@@ -62,12 +62,13 @@ namespace bs_userServer {
     /**
      * 注册功能
      */
-    export function registered (username: String, password: String, name: String){
+    export function registered (username: String, password: String, name: String, iphone: String){
         return new Promise(suc=>{
             let bs_user = bs_userModel.get();
             bs_user.setFeilds("username",username);
             bs_user.setFeilds("password",password);
             bs_user.setFeilds("name",name);
+            bs_user.setFeilds("iphone",iphone);
             bs_user.add().then((res: any)=>{ suc(res) });
         })
     }

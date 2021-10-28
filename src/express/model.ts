@@ -160,8 +160,9 @@ export class Model extends Modelabstract {
             // 生成获取sql
             var sql = `select ${filedsString.join(",")} from ${this.__name} where ${where} limit ${page},${size}`;
             var connect = db.connection();
+            console.log(sql,anny);
             db.operate(connect,sql,anny,function(result: any){
-                suc(result)
+                suc({code: 200, data: result})
             });
         })
     }

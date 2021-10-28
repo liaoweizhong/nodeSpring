@@ -88,13 +88,18 @@ import { getId } from '../express/util'
 namespace ${name}Server {
 
     export function getById (id: String){
-        
         return new Promise((suc)=>{
             var ${name} = ${name}Model.get();
             ${name}.setFeilds('${key.Field}',id);
             ${name}.get().then((res)=>{ suc(res); });
         })
+    }
 
+    export function query (param: any){
+        return new Promise((suc)=>{
+            var sy_folder = sy_folderModel.get();
+            sy_folder.query(param).then((res)=>{ suc(res); });
+        })
     }
 
     export function addParam ( param: any ){ 

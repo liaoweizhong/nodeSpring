@@ -37,6 +37,9 @@ let update = window.update = function(name,base64,type){
     // 保存的服务器路径
     this.path = '';
 
+    // 文件夹名称
+    this.folder = "";
+
     // 初始化处理
     // this.init();
 
@@ -101,12 +104,12 @@ const updateFile = function(index = 0){
     var name = this.name;
     var base64 = this.baseArray[index];
     if( !base64 ){ 
-        this.oncomplete && this.oncomplete({
-            index, name, id, res: null, isload: true,
-            rate: (index)/this.baseArray.length
-        });
         this.mergeFile().then((res)=>{
-          console.log("合成成功");  
+            this.oncomplete && this.oncomplete({
+                index, name, id, res: res, isload: true,
+                rate: (index)/this.baseArray.length
+            });
+            console.log("合成成功");  
         })
         return console.log("请求结束"); 
     }
@@ -136,7 +139,7 @@ const updateVideo = function(param){
         url: "/bs_updateFile/updateFile",
         method: "post",
         headers: {
-            "Authorization": "token eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjEiLCJ1c2VybmFtZSI6ImxpYW8xMTEiLCJwYXNzd29yZCI6IjEyMzQ1NiIsIm5hbWUiOiLlu5YiLCJjcmVhdGVEYXRhIjoiMjAyMS0wMi0xN1QxNjoxNzoxMi4wMDBaIiwiaW1hZ2VzIjpudWxsLCJpbmZvIjpudWxsLCJsZXZlbCI6Nn0.Xr9ngmrlLksCiGb02qi3o63rAC86PhEw-BjvE6qKjzg"
+            "Authorization": "token "+ token//eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjEiLCJ1c2VybmFtZSI6ImxpYW8xMTEiLCJwYXNzd29yZCI6IjEyMzQ1NiIsIm5hbWUiOiLlu5YiLCJjcmVhdGVEYXRhIjoiMjAyMS0wMi0xN1QxNjoxNzoxMi4wMDBaIiwiaW1hZ2VzIjpudWxsLCJpbmZvIjpudWxsLCJsZXZlbCI6Nn0.Xr9ngmrlLksCiGb02qi3o63rAC86PhEw-BjvE6qKjzg"
         },
         data: param || {
             name: "123456",
@@ -155,7 +158,8 @@ const mergeFile = function(){
         mergeVideo({
             id: id,
             type: this.type,
-            name: this.name
+            name: this.name,
+            folder: this.folder,
         }).then((res)=>{
             a(res.data);
         })
@@ -167,7 +171,7 @@ const mergeVideo = function(param){
         url: "/bs_updateFile/mergeFile",
         method: "get",
         headers: {
-            "Authorization": "token eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjEiLCJ1c2VybmFtZSI6ImxpYW8xMTEiLCJwYXNzd29yZCI6IjEyMzQ1NiIsIm5hbWUiOiLlu5YiLCJjcmVhdGVEYXRhIjoiMjAyMS0wMi0xN1QxNjoxNzoxMi4wMDBaIiwiaW1hZ2VzIjpudWxsLCJpbmZvIjpudWxsLCJsZXZlbCI6Nn0.Xr9ngmrlLksCiGb02qi3o63rAC86PhEw-BjvE6qKjzg"
+            "Authorization": "token "+ token//eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjEiLCJ1c2VybmFtZSI6ImxpYW8xMTEiLCJwYXNzd29yZCI6IjEyMzQ1NiIsIm5hbWUiOiLlu5YiLCJjcmVhdGVEYXRhIjoiMjAyMS0wMi0xN1QxNjoxNzoxMi4wMDBaIiwiaW1hZ2VzIjpudWxsLCJpbmZvIjpudWxsLCJsZXZlbCI6Nn0.Xr9ngmrlLksCiGb02qi3o63rAC86PhEw-BjvE6qKjzg"
         },
         params: param
     })

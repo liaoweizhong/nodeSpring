@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <!-- import CSS -->
+        <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+        <!-- import Vue before Element -->
+        <script src="https://unpkg.com/vue/dist/vue.js"></script>
+        <!-- import JavaScript -->
+        <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+        <!-- import axios -->
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="./updateFile.js" rel='stylesheet'></script>
+    </head>
+
+    <style>
+        .updateBox {
+            height: 150px;
+            padding: 15px;
+            line-height: 150px;
+            text-align: center;
+        }
+        .ralte {
+            height: 20px;
+            background: #ffff00;
+            width: 30%;
+            border-radius: 15px;
+            text-align: center;
+            transition: width 0.25s;
+        }
+        .text {
+            text-align: center;
+            display: flex;
+            flex-flow: wrap;
+        }
+        .text > div {
+            border-radius: 4px;
+            border: solid 1px #a89f9f;
+            padding: 4px;
+            width: 100px;
+            height: 115px;
+            margin: 8px 8px;
+            cursor: pointer;
+        }
+        .font {
+            font-size: 12px;
+            height: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            width: 100%;
+        }
+        .text div.folder {
+            background: #b8d83c;
+        }
+        .text div.file {
+
+        }
+        .perv {
+            font-size: 12px;
+            border: solid 1px #a89f9f;
+            background: #a89f9f;
+            border-radius: 6px;
+            padding: 4px;
+            margin: 8px;
+            cursor: pointer;
+        }
+        .updateBtn {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-radius: 4px;
+            background: #00b8ff;
+            font-size: 12px;
+            padding: 7px 12px;
+            color: #fff;
+            box-shadow: 2px 2px 3px #a5a5a5;
+        }
+
+        .clearfix {
+            position: relative;
+        }
+
+        .video {
+            width: 300px;
+            height: 300px;
+        }
+    </style>
+
+    <body>
+        <div id="app">
+
+        </div>
+    </body>
+    <script>
+        axios({
+            url: "/test",
+            method: "post",
+            data: {
+                asdasd: "123123"
+            }
+        }).then((e)=>{
+            
+        })
+    </script>
+
+</html>

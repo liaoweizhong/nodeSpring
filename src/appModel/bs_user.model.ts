@@ -30,10 +30,14 @@ class bs_userModel extends Model {
                             
     // 账号安全级别 
     public level:Filed = new Filed("level", Fieldtype.Number );
+
+    // 账号安全级别 
+    public iphone:Filed = new Filed("iphone", Fieldtype.String );
             
     // 根据用户名密码获取内容
     public getByUsernamePassword (username: String,password: String){
         return new Promise((suc)=>{
+            // console.log(`select * from ${this.__name} where username=? and password=?`,[username,password])
             db.operate(db.connection(),`select * from ${this.__name} where username=? and password=?`,[username,password],function(data: any){
                 suc(data);
             })

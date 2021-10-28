@@ -1,8 +1,10 @@
 /node_modules/
 /mysql/
 
-/database.config.js_
-/updateFile
+/database.config.js
+/email.config.js
+/message.config.js
+/src/updateFile
 
 
 *.rar

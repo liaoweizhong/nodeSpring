@@ -35,6 +35,24 @@ class MysqlDB {
         })
     }
 
+    // 回滚查询
+    transaction (callback: Function){
+        let connection = this.connection()
+        connection.beginTransaction(function (err: any) {
+            if (err) {
+                return callback(err, null);
+            }
+            
+            try {
+                callback(connection)
+            }catch (e){
+                connection.rollback(function (err: any) {
+                    callback(err, null);
+                });
+            }
+        })
+    }
+
 }
 
 let db = new MysqlDB();

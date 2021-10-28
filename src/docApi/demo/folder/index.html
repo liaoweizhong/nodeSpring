@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <!-- import CSS -->
+        <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+        <!-- import Vue before Element -->
+        <script src="https://unpkg.com/vue/dist/vue.js"></script>
+        <!-- import JavaScript -->
+        <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+        <!-- import axios -->
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="./updateFile.js" rel='stylesheet'></script>
+    </head>
+
+    <style>
+        .updateBox {
+            height: 150px;
+            padding: 15px;
+            line-height: 150px;
+            text-align: center;
+        }
+        .ralte {
+            height: 20px;
+            background: #ffff00;
+            width: 30%;
+            border-radius: 15px;
+            text-align: center;
+            transition: width 0.25s;
+        }
+        .text {
+            text-align: center;
+            display: flex;
+            flex-flow: wrap;
+        }
+        .text > div {
+            border-radius: 4px;
+            border: solid 1px #a89f9f;
+            padding: 4px;
+            width: 100px;
+            height: 115px;
+            margin: 8px 8px;
+            cursor: pointer;
+        }
+        .font {
+            font-size: 12px;
+            height: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            width: 100%;
+        }
+        .text div.folder {
+            background: #b8d83c;
+        }
+        .text div.file {
+
+        }
+        .perv {
+            font-size: 12px;
+            border: solid 1px #a89f9f;
+            background: #a89f9f;
+            border-radius: 6px;
+            padding: 4px;
+            margin: 8px;
+            cursor: pointer;
+        }
+        .optBtn {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+        }
+        .updateBtn {
+            border-radius: 4px;
+            background: #00b8ff;
+            font-size: 12px;
+            padding: 7px 12px;
+            color: #fff;
+            box-shadow: 2px 2px 3px #a5a5a5;
+            margin: 0 3px;
+        }
+
+        .clearfix {
+            position: relative;
+        }
+
+        .video {
+            width: 300px;
+            height: 300px;
+        }
+    </style>
+
+    <body>
+        <div id="app">
+            <el-card class="box-card">
+                <div slot="header" class="clearfix">
+                    <span class='perv' @click='pervClick(it,i)' v-for='(it, i) in paths' :key='i' >{{it.name}}</span>
+
+                    <div class='optBtn'>
+                        <div class='updateBtn' @click='updateClick'>上传文件</div>
+                        <div class='updateBtn' @click='addFolder'>新建文件夹</div>
+                    </div>
+                </div>
+                <div class="text"  @drop='dropFile' ondragover='event.preventDefault()'>
+                    <!-- <div class='updateBox' @click='updateClick' @drop='dropFile' ondragover='event.preventDefault()'>点击上传(或者直接拖進來)</div>
+                    <div class='ralte' v-show='rate > 0' :style='"width:"+rate*100+"%"'>{{rate * 100}}%</div> -->
+                    <!-- 首先加载文件夹 -->
+                    <div @click='openFolder(it)' class='folder' v-for='(it, i) in folder.folder' :key='i'>
+                        <div v-html='typeImages[it.type]'></div>
+                        <div class='font'>{{it.name}}</div>
+                    </div>
+                    <div class='file' v-for='(it, i) in folder.files' :key='i'>
+                        <div 
+                            v-show='!it.hide' 
+                            v-html='typeImages[it.type]' @click='clickFile'></div>
+                        <el-image 
+                            lazy
+                            @load='it.hide = true'
+                            v-if='["image/png","image/jpeg"].indexOf(it.type) != -1'
+                            style="width: 64px; height: 64px"
+                            :src="'http://106.55.173.21:2222/updateFile/document'+it.path" 
+                            :preview-src-list="['http://106.55.173.21:2222/updateFile/document'+it.path]">
+                        </el-image>
+                        <div style='width: 64px;height: 64px;position: relative;' v-if='it.type === "update"'>
+                            <div style="position: relative;z-index: 1;">{{it.rate}}%</div>
+                            <div :style='"width:"+it.rate+"%"' style='width: 0%;background-color: aqua;position: absolute;height: 100%;top: 0;'></div>
+                        </div>
+                        <div class='font'>
+                            <!-- <span>{{it.name}}</span> -->
+                            {{it.name}}
+                        </div>
+                    </div>
+                </div>
+            </el-card>
+
+            <!-- <el-dialog
+                title="提示"
+                :visible.sync="showVideo"
+                width="30%">
+                <span>这是一段信息</span>
+                <video class='video' :src='videoUrl'></video>
+            </el-dialog> -->
+        </div>
+    </body>
+    <script>
+
+        var token = localStorage.getItem("token");
+        if( !token ){
+            location.href = "../login/index.html";
+        }
+
+        document.ondragover = function (e) {
+            e.preventDefault();  //只有在ondragover中阻止默认行为才能触发 ondrop 而不是   ondragleave
+        };
+        document.ondrop = function (e) {
+            e.preventDefault();  //阻止 document.ondrop的默认行为  *** 在新窗口中打开拖进的图片
+        };
+
+        icon = {
+            // 文件夹
+            "folder":'<svg t="1634808275249" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2503" data-spm-anchor-id="a313x.7781069.0.i0" width="64" height="64"><path d="M912 208H427.872l-50.368-94.176A63.936 63.936 0 0 0 321.056 80H112c-35.296 0-64 28.704-64 64v736c0 35.296 28.704 64 64 64h800c35.296 0 64-28.704 64-64v-608c0-35.296-28.704-64-64-64z m-800-64h209.056l68.448 128H912v97.984c-0.416 0-0.8-0.128-1.216-0.128H113.248c-0.416 0-0.8 0.128-1.248 0.128V144z m0 736v-96l1.248-350.144 798.752 1.216V784h0.064v96H112z" p-id="2504"></path></svg>',
+            // txt
+            'txt': '<svg t="1634808403199" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3379" data-spm-anchor-id="a313x.7781069.0.i3" width="64" height="64"><path d="M725.4 308h-440c-11 0-20-9-20-20v-11.6c0-44.8 36.6-81.4 81.4-81.4h69.6V142.4c0-49.2 40-89 89-89 49.2 0 89 40 89 89v52.8H664c44.8 0 81.4 36.6 81.4 81.4v11.6c0 10.8-8.8 19.8-20 19.8z m-419-40h398.2c-4-18.8-20.6-33-40.4-33h-89.6c-11 0-20-9-20-20V142.4c0-27-22-49-49-49s-49 22-49 49v72.8c0 11-9 20-20 20h-89.6c-20-0.2-36.6 14-40.6 32.8z" fill="#262435" p-id="3380"></path><path d="M762.8 948.6H248.2c-61 0-110.8-49.6-110.8-110.8V241.2c0-61 49.6-110.8 110.8-110.8h105.2c11 0 20 9 20 20s-9 20-20 20h-105.2c-39 0-70.8 31.8-70.8 70.8V838c0 39 31.8 70.8 70.8 70.8h514.6c39 0 70.8-31.8 70.8-70.8V241.2c0-39-31.8-70.8-70.8-70.8h-105.2c-11 0-20-9-20-20s9-20 20-20h105.2c61 0 110.8 49.6 110.8 110.8V838c0 61-49.8 110.6-110.8 110.6z" fill="#262435" p-id="3381"></path><path d="M505.6 160.2m-24 0a24 24 0 1 0 48 0 24 24 0 1 0-48 0Z" fill="#262435" p-id="3382"></path><path d="M719.4 458.4H285.6c-11 0-20-9-20-20s9-20 20-20h433.8c11 0 20 9 20 20s-9 20-20 20zM719.4 627.6H285.6c-11 0-20-9-20-20s9-20 20-20h433.8c11 0 20 9 20 20s-9 20-20 20zM719.4 796.8H285.6c-11 0-20-9-20-20s9-20 20-20h433.8c11 0 20 9 20 20s-9 20-20 20z" fill="#262435" p-id="3383"></path></svg>',
+            // 图片
+            'img': '<svg t="1634870529084" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3970" width="64" height="64"><path d="M896 626.592a16 16 0 0 0-7.68-13.664l-172.448-105.088a16 16 0 0 0-20.704 3.52l-76 92.608-1.024 1.152a16 16 0 0 1-22.624 0.032l-252.832-252.064a16.032 16.032 0 0 0-22.08-0.512l-187.36 170.656a15.936 15.936 0 0 0-5.248 11.84V800h768v-173.408z" p-id="3971"></path><path d="M800 320m-64 0a64 64 0 1 0 128 0 64 64 0 1 0-128 0Z" p-id="3972"></path><path d="M32 128v768h960V128H32z m896 704H96V192h832v640z" p-id="3973"></path></svg>',
+            // 视频文件
+            'mp4': '<svg t="1634872265353" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4940" width="64" height="64"><path d="M450.048 315.904L305.152 144.896H140.8l144.896 170.496h164.352z m427.008 0l-145.408-171.008h-164.352l144.896 170.496h164.864z m-213.504 0l-144.896-171.008H354.304l144.896 170.496h164.352z m274.944-171.008h-157.696l144.896 170.496h76.8V208.896a62.7712 62.7712 0 0 0-64-64z m-846.848 0h-6.144A62.7712 62.7712 0 0 0 21.504 208.896v106.496h215.552L91.648 144.896zM21.504 866.304a62.7712 62.7712 0 0 0 64 64h853.504a62.7712 62.7712 0 0 0 64-64V358.4H21.504z" fill="#222222" p-id="4941"></path><path d="M386.56 532.48c0-27.136 22.016-39.424 47.616-39.424a53.7088 53.7088 0 0 1 25.6 6.144l180.736 104.96a44.9536 44.9536 0 0 1 0 79.36l-180.736 104.448a47.5136 47.5136 0 0 1-25.6 6.144c-25.6 0-47.616-12.8-47.616-39.424z" fill="#00B65F" p-id="4942"></path></svg>',
+            // 未知文件
+            'file': '<svg t="1634870060623" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3137" width="64" height="64"><path d="M192 0h448.1536L960 320v576c0 70.6944-57.3056 128-128 128H192C121.3056 1024 64 966.6944 64 896V128C64 57.3056 121.3056 0 192 0z" fill="#BCCBD7" p-id="3138"></path><path d="M540.5056 656v-8.064c0-13.824 2.7904-25.9072 8.384-37.4272a88.832 88.832 0 0 1 22.3616-28.7872c26.8288-24.1792 43.0336-39.7184 48.064-45.4784C632.7296 517.8112 640 494.208 640 465.408c0-35.1232-11.1744-62.7584-33.536-82.9056-22.3616-20.736-51.9808-30.5152-88.32-30.5152-41.3568 0-73.7792 12.096-97.8176 36.2752C395.7376 412.4544 384 445.8496 384 488.448h63.7184c0-24.192 4.48-43.1872 13.9776-56.4352 10.624-16.128 27.9424-23.6032 52.544-23.6032 18.9952 0 34.0864 5.184 44.7104 16.128 10.0608 10.9312 15.6544 25.9072 15.6544 44.9024 0 14.4-5.0304 28.2112-15.104 40.8832l-6.6944 8.064c-36.3392 33.3824-58.1376 57.5744-65.408 73.1136-7.808 15.552-11.1744 34.5472-11.1744 56.4224v8.064h64.2816zM503.744 768c11.3536 0 20.6464-3.712 28.3904-11.136 7.7312-7.4112 11.8656-17.472 11.8656-29.1328 0-11.648-4.1344-21.184-11.3536-28.608-7.744-7.424-17.5488-11.1232-28.9024-11.1232s-20.6464 3.712-28.3904 11.136c-7.744 7.4112-11.3536 16.9472-11.3536 28.5952 0 11.648 3.6096 21.1968 11.3536 28.608 7.744 7.424 17.024 11.6608 28.3904 11.6608z" fill="#8497A6" opacity=".9" p-id="3139"></path><path d="M640 0l320 320H768c-70.6944 0-128-57.3056-128-128V0z" fill="#8497A6" p-id="3140"></path></svg>',
+            // 压缩文件架
+            "rar": '<svg t="1634899347695" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6148" width="64" height="64"><path d="M0 0m46.545455 0l930.90909 0q46.545455 0 46.545455 46.545455l0 930.90909q0 46.545455-46.545455 46.545455l-930.90909 0q-46.545455 0-46.545455-46.545455l0-930.90909q0-46.545455 46.545455-46.545455Z" fill="#F75C65" p-id="6149"></path><path d="M46.545455 0h930.90909a46.545455 46.545455 0 0 1 46.545455 46.545455v279.272727H0V46.545455a46.545455 46.545455 0 0 1 46.545455-46.545455z" fill="#4CC8FD" p-id="6150"></path><path d="M0 698.181818h1024v279.272727a46.545455 46.545455 0 0 1-46.545455 46.545455H46.545455a46.545455 46.545455 0 0 1-46.545455-46.545455V698.181818z" fill="#83CC39" p-id="6151"></path><path d="M372.363636 0h279.272728v1024H372.363636z" fill="#FEAB41" p-id="6152"></path><path d="M663.272727 628.363636h-302.545454a34.909091 34.909091 0 0 1-34.909091-34.909091v-162.90909a34.909091 34.909091 0 0 1 34.909091-34.909091h302.545454a34.909091 34.909091 0 0 1 34.909091 34.909091v162.90909a34.909091 34.909091 0 0 1-34.909091 34.909091zM372.363636 581.818182h279.272728v-139.636364H372.363636z" fill="#FFFFFF" p-id="6153"></path></svg>'
+        }
+
+        new Vue({
+            el: '#app',
+            data: function () {
+                return {
+                    showVideo: false,
+                    videoUrl: "",
+                    visible: false,
+                    tableData: [],
+                    inputFile: null,
+                    rate: 0,
+                    paths: [
+                        { name: "我的文件", id: "" }
+                    ],
+                    folders: [
+                        { id: "", folder: [], files: [] }
+                    ],
+                    id: "",
+                    folder: { 
+                        id: "", 
+                        folder: [ 
+                            { name: "测试文件夹", id: "1", type: "folder" }
+                        ], files: [
+                            { name: "测试文件", id: "1", type: "file" }
+                        ] 
+                    },
+                    typeImages:{
+                        "text/plain": icon.txt,
+                        "image/jpeg": icon.img,
+                        "application/x-zip-compressed": icon.rar,
+                        "application/x-rar-compressed": icon.rar, 
+                        "image/png": icon.img,
+                        "video/mp4": icon.mp4,
+                        "folder": icon.folder,
+                        "file": icon.file,
+                    }
+                }
+            },
+            mounted (){
+                // this.getTable();
+                this.getFolers().then(()=>{
+                    this.getFiles().then(()=>{
+                        this.refreshFolder();
+                    });
+                });
+            },
+            methods: {
+                updateClick (){
+                    this.rate = 0;
+                    var ue = new update();
+                    var it = { name: ue.name, id: "", path: "", type: "update", hide: true, rate: 0 };
+                    ue.folder = this.paths[this.paths.length-1].id;
+                    ue.oncomplete = (res)=>{
+                        console.log(res);
+                        it.rate = res.rate * 100;
+                        if( res.isload === true ){
+                            it.id = res.res.data.data.id
+                            it.path = res.res.data.data.path
+                            it.type = this.typeImages[ue.type] ? ue.type : "file";
+                            it.hide = false;
+                        }
+                    }
+                    ue.selectFlie().then(()=>{
+                        it.name = ue.name;
+                        // 新增一个模块
+                        this.folder.files.push(it)
+                        ue.init();
+                    });
+                },
+
+                dropFile (res){
+                    this.rate = 0;
+                    var ue = new update();
+                    ue.folder = this.paths[this.paths.length-1].id;
+                    ue.oncomplete = (res)=>{
+                        console.log(res);
+                        this.rate = res.rate;
+                    }
+                    ue.setFiles(res.dataTransfer.files[0]).then(()=>{
+                        ue.init();
+                    });
+                },
+
+                pervClick (item, i){
+                    this.paths.splice(i,Infinity);
+                    this.openFolder(item);
+                },
+
+                openFolder (item){
+                    // 加载一个新的文件夹路径
+                    this.paths.push(item)
+                    this.id = item.id;
+                    // 首先判断一下文件内容是否有缓存
+                    var folder = this.folders.find((e)=>{ return e.id === item.id });
+                    if( !folder ){
+                        // 新增一个文件管理器缓存
+                        this.folders.push({ id: item.id, folder: [], files: [] })
+                        // 请求数据 
+                        this.getFolers(item.id).then(()=>{
+                            this.getFiles(item.id).then(()=>{
+                                this.refreshFolder();
+                            });
+                        });
+                    }else{
+                        this.refreshFolder();
+                    }
+                },
+
+                // 新建文件夹
+                addFolder (){
+                    return axios({
+                        url: "/sy_folder",
+                        method: "post",
+                        headers: {
+                            "Authorization": "token "+ token //eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjEiLCJ1c2VybmFtZSI6ImxpYW8xMTEiLCJwYXNzd29yZCI6IjEyMzQ1NiIsIm5hbWUiOiLlu5YiLCJjcmVhdGVEYXRhIjoiMjAyMS0wMi0xN1QxNjoxNzoxMi4wMDBaIiwiaW1hZ2VzIjpudWxsLCJpbmZvIjpudWxsLCJsZXZlbCI6Nn0.Xr9ngmrlLksCiGb02qi3o63rAC86PhEw-BjvE6qKjzg"
+                        },
+                        data: {
+                            name: "新建文件夹",
+                            parent: this.paths[this.paths.length-1].id
+                        }
+                    }).then((res)=>{
+                        debugger;
+                        // this.refreshFolder();
+                        this.folder.folder.push({
+                            id: res.data.insertId,
+                            name: "新建文件夹",
+                            parent: this.paths[this.paths.length-1].id,
+                            type: "folder"
+                        })
+                    })
+                },
+
+                // 获取文件夹
+                getFolers (id = ""){
+                    return axios({
+                        url: "/sy_folder/getByUserAndFolder",
+                        method: "get",
+                        headers: {
+                            "Authorization": "token "+ token //eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjEiLCJ1c2VybmFtZSI6ImxpYW8xMTEiLCJwYXNzd29yZCI6IjEyMzQ1NiIsIm5hbWUiOiLlu5YiLCJjcmVhdGVEYXRhIjoiMjAyMS0wMi0xN1QxNjoxNzoxMi4wMDBaIiwiaW1hZ2VzIjpudWxsLCJpbmZvIjpudWxsLCJsZXZlbCI6Nn0.Xr9ngmrlLksCiGb02qi3o63rAC86PhEw-BjvE6qKjzg"
+                        },
+                        params: {
+                            folder: id
+                        }
+                    }).then((res)=>{
+                        res.data.data.forEach((e)=>{
+                            e.type = "folder"
+                        });
+                        var folder = this.folders.find((e)=>{ return e.id === id });
+                        folder.folder = res.data.data
+                    })
+                },
+
+                // 获取文件
+                getFiles (id = ""){
+                    return axios({
+                        url: "/bs_updateFile/getByUserAndFolder",
+                        method: "get",
+                        headers: {
+                            "Authorization": "token "+ token //eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjEiLCJ1c2VybmFtZSI6ImxpYW8xMTEiLCJwYXNzd29yZCI6IjEyMzQ1NiIsIm5hbWUiOiLlu5YiLCJjcmVhdGVEYXRhIjoiMjAyMS0wMi0xN1QxNjoxNzoxMi4wMDBaIiwiaW1hZ2VzIjpudWxsLCJpbmZvIjpudWxsLCJsZXZlbCI6Nn0.Xr9ngmrlLksCiGb02qi3o63rAC86PhEw-BjvE6qKjzg"
+                        },
+                        params: {
+                            folder: id
+                        }
+                    }).then((res)=>{
+                        res.data.data.forEach((e)=>{
+                            (!e.type || !this.typeImages[e.type] ) && (e.type = "file")
+                            e.hide = false;
+                            e.rate = 0;
+                        });
+                        var folder = this.folders.find((e)=>{ return e.id === id });
+                        folder.files = res.data.data
+                    })
+                },
+
+                // 刷新
+                refreshFolder (){
+                    this.folder = this.folders.find((e)=>{ return e.id === this.id });
+                },
+
+                // 点击了文件
+                clickFile (item){
+                    // 首先判断一下当前文件类型
+
+                }
+            }
+        })
+    </script>
+
+</html>
