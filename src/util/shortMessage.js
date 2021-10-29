@@ -1,6 +1,6 @@
 // Depends on tencentcloud-sdk-nodejs version 4.0.3 or higher
 const tencentcloud = require("tencentcloud-sdk-nodejs");
-const config = require("../../message.config")
+const config = require("../../config/message.config")
 
 const SmsClient = tencentcloud.sms.v20210111.Client;
 

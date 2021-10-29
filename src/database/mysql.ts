@@ -1,5 +1,5 @@
 const mysql = require('mysql');
-const databaseConfig = require("../../database.config")
+const databaseConfig = require("../../config/database.config")
 
 class MysqlDB {
 

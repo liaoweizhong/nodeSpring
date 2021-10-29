@@ -1,7 +1,7 @@
 let apisArray: Array<Object> = [];
 import db from '../database'
 import { createModel, createServer, createAction } from './docCreate'
-const databaseConfig =  require('../../database.config');
+const databaseConfig =  require('../../config/database.config');
 
 
 /**
@@ -80,7 +80,6 @@ export function createDoc (app: any){
         if( model === true || server === true || action === true ){
             var sql = `-- 查询表的信息 和 字段的信息
             show full columns from ${databaseConfig.database}.${name};`;
-            console.log(action);
             db.operate(connect,sql,[],function(result: any){
                 if( model ){
                     createModel( name , result, function(){
@@ -102,7 +101,6 @@ export function createDoc (app: any){
                 }else{
                     sucIndex++;
                 }
-                console.log(action);
                 if( action === true ){
                     createAction( name , result , function(){
                         sucIndex++;

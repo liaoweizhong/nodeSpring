@@ -58,7 +58,7 @@ class bs_updateFile extends Interface  {
         })
     }
 
-    // 获取文件内容 根据用户和文件夹
+    // 获取文件内容 根据用户和文件夹 
     @Get( "/getByUserAndFolder" , { isLogin: true } )
     getByUserAndFolder (param: any, user: any, retJson: Function){
         bs_updateFileServer.query({ useId: user.id, folder: param.folder }).then((data)=>{ 

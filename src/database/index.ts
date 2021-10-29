@@ -1,5 +1,5 @@
 import mysql from "./mysql";
-const databaseConfig = require("../../database.config")
+const databaseConfig = require("../../config/database.config")
 
 let defaultDB;
 if( databaseConfig.type === "mysql" ){

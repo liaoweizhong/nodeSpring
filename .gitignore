@@ -1,9 +1,14 @@
 /node_modules/
 /mysql/
 
+
+
 /database.config.js
+
 /email.config.js
+
 /message.config.js
+
 /src/updateFile
 
 

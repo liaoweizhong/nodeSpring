@@ -1,5 +1,5 @@
 var nodemailer = require("nodemailer");
-var settingConfig = require('../../email.config.js');//解析参数
+var settingConfig = require('../../config/email.config.js');//解析参数
 
 var smtp = settingConfig.smtp;
 var mailFrom = settingConfig.mailFrom;
