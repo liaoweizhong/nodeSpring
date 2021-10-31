@@ -135,9 +135,12 @@ export class Interface {
             // 创建post请求
             app.newExpress.put(this.path+json.url,(req: any,res: any)=>{
                 // 获取修改id
-                var id = req.params.id;
+                var id = req.body.id;
+                // console.log("req.params.id:", req.params.id)
+                // console.log("req.query:", JSON.stringify(req.query))
+                // console.log("req.body:", JSON.stringify(req.body))
                 // 获取前段传入的参数
-                let param:any = req.query;
+                let param:any = req.body;
                 param.id = id;
                 this.handlerFn(json,param,setTokenByHeader(req.headers),res);
             })
@@ -145,9 +148,9 @@ export class Interface {
             // 创建post请求
             app.newExpress.delete(this.path+json.url,(req: any,res: any)=>{
                 // 获取修改id
-                var id = req.params.id;
+                var id = req.body.id;
                 // 获取前段传入的参数
-                let param:any = req.query;
+                let param:any = req.body;
                 param.id = id;
                 // 获取前端请求头发送过来的sessiontoken 
                 this.handlerFn(json,param,setTokenByHeader(req.headers),res);

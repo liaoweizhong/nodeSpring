@@ -22,7 +22,7 @@ class bs_user extends Interface  {
     // @DocumentationApiInter("根据用户id获取用户数据",documentationType.API, "2021/06/02 17:57")
     post (param: any, user: any, resJson: Function){
         // 新增用户
-        bs_userServer.add('','','','','','',0).then((data)=>{
+        bs_userServer.addParam(param).then((data)=>{
             resJson(data)
         })
     }

@@ -18,18 +18,31 @@ namespace bs_userServer {
 
     }
 
-    export function add ( username: String ,password: String ,name: String ,createData: String ,images: String ,info: String ,level: Number  ){ 
+    export function addParam ( param: any ){ 
+        return new Promise((suc)=>{
+            let ceshi: any = bs_userModel.get();
+            let id:any = getUuid();
+            ceshi.setFeilds("id",id)
+            param.name && ceshi.setFeilds("name",param.name) 
+;
+            ceshi.add().then((res: any)=>{ res.insertId = id; suc(res) });
+        })
+    }
+
+    export function add ( param: any ){ 
         return new Promise((suc)=>{
             let bs_user: any = bs_userModel.get();
             let id:any = getUuid();
             bs_user.setFeilds("id",id)
-            username && bs_user.setFeilds("username",username) 
-            password && bs_user.setFeilds("password",password) 
-            name && bs_user.setFeilds("name",name) 
-            createData && bs_user.setFeilds("createData",createData) 
-            images && bs_user.setFeilds("images",images) 
-            info && bs_user.setFeilds("info",info) 
-            level && bs_user.setFeilds("level",level) 
+            // let username: String ,password: String ,name: String ,createData: String ,images: String ,info: String ,level: Number;
+            param.username && bs_user.setFeilds("username",param.username) 
+            param.password && bs_user.setFeilds("password",param.password) 
+            param.name && bs_user.setFeilds("name",param.name) 
+            param.createData && bs_user.setFeilds("createData",param.createData) 
+            param.images && bs_user.setFeilds("images",param.images) 
+            param.info && bs_user.setFeilds("info",param.info) 
+            param.level && bs_user.setFeilds("level",param.level) 
+            param.iphone && bs_user.setFeilds("iphone",param.iphone) 
 ;
             bs_user.add().then((res: any)=>{ res.insertId = id; suc(res) });
         })

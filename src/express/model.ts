@@ -87,6 +87,28 @@ export class Model extends Modelabstract {
         })
     }
 
+    /**
+     * 获取列表接口
+     * @param page 页码
+     * @param count 个数
+     * @returns 
+     */
+    getList (page: number = 0, count: number = 10, where: string|null){
+        return new Promise((suc)=>{
+            var selectFeild = this.getSelectFeild();
+            if( !selectFeild || selectFeild.length === 0 ){
+                return suc({ code: 401 , data: null , msg : "没有查询字段" })
+            }
+
+            // 生成获取sql
+            var sql = `select ${selectFeild.map((e)=>{ return e.getName(); }).join(",")} from ${this.__name} ${where? "where "+where : ""} limit ${page*count+","+page*count+count}`;
+            var connect = db.connection();
+            db.operate(connect,sql,[],function(result: any){
+                suc({code: 200, data: result, page, count})
+            });
+        })
+    }
+
     public add (){
         return new Promise((suc)=>{
             var fields:Array<String> = [];
@@ -160,7 +182,6 @@ export class Model extends Modelabstract {
             // 生成获取sql
             var sql = `select ${filedsString.join(",")} from ${this.__name} where ${where} limit ${page},${size}`;
             var connect = db.connection();
-            console.log(sql,anny);
             db.operate(connect,sql,anny,function(result: any){
                 suc({code: 200, data: result})
             });

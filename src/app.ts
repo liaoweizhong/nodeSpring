@@ -19,7 +19,7 @@ class server extends expressServer {
 }
 
 // 加载server层
-require('./appServer'); 
+require('./appServer');
 
 // 加载action层
-require('./appAction'); 
+require('./appAction');

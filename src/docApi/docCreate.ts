@@ -97,7 +97,7 @@ namespace ${name}Server {
 
     export function query (param: any){
         return new Promise((suc)=>{
-            var sy_folder = sy_folderModel.get();
+            var sy_folder = ${name}Model.get();
             sy_folder.query(param).then((res)=>{ suc(res); });
         })
     }
@@ -122,6 +122,7 @@ ${setFields};
         })
     }
 
+    // 修改
     export function update ( ${key.Field}: ${getType(key)} ,${filedModel} ){
         return new Promise((suc)=>{
             let ${name} = ${name}Model.get();
@@ -131,11 +132,31 @@ ${updateField}
         })
     }
 
+    // 修改
+    export function updateParam ( param: any ){
+        return new Promise((suc)=>{
+            let ${name} = ${name}Model.get();
+            ${name}.setFeilds("${key.Field}",param.${key.Field});
+${setFieldsAddParam}
+            ${name}.update().then((res)=>{ suc(res) });
+        })
+    }
+
+    // 删除
     export function del ( id: String ){
         return new Promise((suc)=>{
             let ${name} = ${name}Model.get();
             ${name}.setFeilds("${key.Field}",${key.Field});
             ${name}.del().then((res)=>{ suc(res) });
+        })
+    }
+
+    // 生成列表用接口
+    export function getList (param: any){
+        return new Promise((suc)=>{
+            let ceshi = ceshiModel.get();
+            //第三个参数为查询条件 是直接为where文档 使用时请自己重写条件
+            ceshi.getList(param.page,param.count,null).then((res)=>{ suc(res) });
         })
     }
 
@@ -200,7 +221,7 @@ class ${name} extends Interface  {
     // @DocumentationApiInter("根据用户id获取用户数据",documentationType.API, "2021/06/02 17:57")
     post (param: any, user: any, resJson: Function){
         // 新增用户
-        ${name}Server.add(${filedModel}).then((data)=>{
+        ${name}Server.addParam(param).then((data)=>{
             resJson(data)
         })
     }
@@ -209,7 +230,7 @@ class ${name} extends Interface  {
     // @DocumentationApiInter("根据用户id获取用户数据",documentationType.API, "2021/06/02 17:57")
     put (param: any, user: any, resJson: Function){
         // 新增用户
-        ${name}Server.update(${filedModelUpdate}).then((data)=>{
+        ${name}Server.updateParam(param).then((data)=>{
             resJson(data)
         })
     }
@@ -223,6 +244,14 @@ class ${name} extends Interface  {
         })
     }
 
+    // 获取列表接口 （where参数最好是重写）
+    @Get( "/list" )
+    list (param: any, user: any, resJson: Function){
+        // 新增用户
+        ceshiServer.getList(param).then((data)=>{
+            resJson(data)
+        })
+    }
 }`
     // 创建新的文件
     var filePath = path.resolve('./src/appAction');
